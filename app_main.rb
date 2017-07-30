@@ -2,7 +2,7 @@ require 'sinatra'
 require 'line/bot'
 
 get '/' do
-  "Hello world"
+  "Hello world Web test"
 end
 
 def client
