@@ -54,7 +54,11 @@ post '/callback' do
           else
             results['rest'].each_with_index do |result, index|
               hash                      = {}
-              hash['thumbnailImageUrl'] = result['image_url']['shop_image1'].empty? || 'https://raw.githubusercontent.com/mizukami2005/lita-hackathon/master/no_image.png'
+              if result['image_url']['shop_image1'].empty?
+                'https://raw.githubusercontent.com/mizukami2005/lita-hackathon/master/no_image.png'
+              else
+                hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
+              end
               hash['title']             = result['name'][0, 40]
               hash['text']              = result['category'][0, 60]
               hash['actions']           = [
