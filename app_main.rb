@@ -40,8 +40,18 @@ post '/callback' do
 
           uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
           uri        = URI.parse(uri_string)
-          json       = Net::HTTP.get(uri)
-          results    = JSON.parse(json)
+          results    = ''
+          begin
+            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+              http.get(uri.request_uri)
+            end
+            case response
+            when Net::HTTPSuccess
+              json    = response.body
+              results = JSON.parse(json)
+            end
+          rescue => e
+          end
 
           columns = []
 
@@ -53,15 +63,15 @@ post '/callback' do
             client.reply_message(event['replyToken'], error_message)
           else
             results['rest'].each_with_index do |result, index|
-              hash                      = {}
+              hash = {}
               if result['image_url']['shop_image1'].empty?
                 hash['thumbnailImageUrl'] = 'https://raw.githubusercontent.com/mizukami2005/lita-hackathon/master/no_image.png'
               else
                 hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
               end
-              hash['title']             = result['name'][0, 40]
-              hash['text']              = result['category'][0, 60]
-              hash['actions']           = [
+              hash['title']   = result['name'][0, 40]
+              hash['text']    = result['category'][0, 60]
+              hash['actions'] = [
                 {
                   type:  "postback",
                   label: "投票",
@@ -73,7 +83,7 @@ post '/callback' do
                   uri:   "#{result['url_mobile']}"
                 }
               ]
-              columns[index]            = hash
+              columns[index]  = hash
             end
           end
         end
@@ -122,7 +132,7 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      name = event["postback"]["data"]
+      name    = event["postback"]["data"]
       message = {
         type: 'text',
         text: name
