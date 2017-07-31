@@ -142,6 +142,11 @@ post '/callback' do
           client.reply_message(event['replyToken'], message)
         else
           client.reply_message(event['replyToken'], carousel)
+          message = {
+            type: 'text',
+            text: 'ただいま調べています。もうちょっと待ってね'
+          }
+          client.reply_message(event['replyToken'], message)
         end
       when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
         response = client.get_message_content(event.message['id'])
