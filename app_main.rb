@@ -145,8 +145,7 @@ post '/callback' do
             type: 'text',
             text: 'ただいま調べています。もうちょっと待ってね'
           }
-          client.reply_message(event['replyToken'], wait_message)
-          client.reply_message(event['replyToken'], carousel)
+          client.reply_message(event['replyToken'], wait_message, carousel)
         end
       when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
         response = client.get_message_content(event.message['id'])
