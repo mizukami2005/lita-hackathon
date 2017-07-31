@@ -92,12 +92,7 @@ post '/callback' do
             hash['actions']           = [
               {
                 type:  "postback",
-                label: "Buy",
-                data:  "#{result['name'][0, 40]}"
-              },
-              {
-                type:  "postback",
-                label: "Add to cart",
+                label: "投票",
                 data:  "#{result['name'][0, 40]}"
               },
               {
