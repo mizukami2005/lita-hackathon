@@ -31,7 +31,7 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        key = '0981d433e05e9b622e56f239060ca60d'
+        key = ENV["API_KEY"]
 
         if event.message['text'] =~ /(\s|　)/
           area  = $`
