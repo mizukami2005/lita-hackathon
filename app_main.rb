@@ -69,12 +69,12 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        query = ''
+        query     = ''
         query_key = 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword='
 
         if event.message['text'] =~ /(\s|　)/
-          area = $`
-          food = $'
+          area  = $`
+          food  = $'
           query = query_key + area + "\s" + food + '&hit_per_page=5'
 
           uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
@@ -152,15 +152,13 @@ post '/callback' do
         response = client.get_message_content(event.message['id'])
         tf       = Tempfile.open("content")
         tf.write(response.body)
-      when Line::Bot::Event::Postback
-        if event['postback']['data'] =~ /buy&itemid=111/
-          message  = {
-            type: 'text',
-            text: 'OK'
-          }
-          client.reply_message(event['replyToken'], message)
-        end
       end
+    when Line::Bot::Event::Postback
+      message = {
+        type: 'text',
+        text: 'OK'
+      }
+      client.reply_message(event['replyToken'], message)
     end
   }
 
