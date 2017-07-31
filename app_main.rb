@@ -84,24 +84,32 @@ post '/callback' do
 
           columns = []
 
-          results['rest'].each_with_index do |result, index|
-            hash                      = {}
-            hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
-            hash['title']             = result['name'][0, 40]
-            hash['text']              = 'description'
-            hash['actions']           = [
-              {
-                type:  "postback",
-                label: "投票",
-                data:  "#{result['name'][0, 40]}"
-              },
-              {
-                type:  "uri",
-                label: "お店の情報を見る",
-                uri:   "#{result['url_mobile']}"
-              }
-            ]
-            columns[index]            = hash
+          if results['rest'].nil?
+            error_message = {
+              type: 'text',
+              text: '見つからなかったよ!'
+            }
+            client.reply_message(event['replyToken'], error_message)
+          else
+            results['rest'].each_with_index do |result, index|
+              hash                      = {}
+              hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
+              hash['title']             = result['name'][0, 40]
+              hash['text']              = 'description'
+              hash['actions']           = [
+                {
+                  type:  "postback",
+                  label: "投票",
+                  data:  "#{result['name'][0, 40]}"
+                },
+                {
+                  type:  "uri",
+                  label: "お店の情報を見る",
+                  uri:   "#{result['url_mobile']}"
+                }
+              ]
+              columns[index]            = hash
+            end
           end
         end
 
