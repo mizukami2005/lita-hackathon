@@ -31,12 +31,12 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        query_key = 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword='
+        key = '0981d433e05e9b622e56f239060ca60d'
 
         if event.message['text'] =~ /(\s|　)/
           area  = $`
           food  = $'
-          query = query_key + area + "\s" + food + '&hit_per_page=5'
+          query = "keyid=#{key}&format=json&freeword=#{area}\s#{food}&hit_per_page=5"
 
           uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
           uri        = URI.parse(uri_string)
