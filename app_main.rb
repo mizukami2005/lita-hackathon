@@ -156,7 +156,7 @@ post '/callback' do
         # pat = event['postback']['data']
         message  = {
           type: 'text',
-          text: event['postback']['data']
+          text: 'OK'
         }
         client.reply_message(event['replyToken'], message)
 
