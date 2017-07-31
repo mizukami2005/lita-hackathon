@@ -153,13 +153,13 @@ post '/callback' do
         tf       = Tempfile.open("content")
         tf.write(response.body)
       when Line::Bot::Event::Postback
-        # pat = event['postback']['data']
-        message  = {
-          type: 'text',
-          text: 'OK'
-        }
-        client.reply_message(event['replyToken'], message)
-
+        if event['postback']['data'] =~ /buy&itemid=111/
+          message  = {
+            type: 'text',
+            text: 'OK'
+          }
+          client.reply_message(event['replyToken'], message)
+        end
       end
     end
   }
