@@ -6,6 +6,10 @@ require 'net/http'
 
 get '/' do
   "Hello world Web test"
+  uri = URI.parse('https://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1')
+  json = Net::HTTP.get(uri)
+  result = JSON.parser(json)
+  puts result
 end
 
 def client
