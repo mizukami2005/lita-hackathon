@@ -26,7 +26,12 @@ post '/callback' do
   end
 
   # ぐるなびapi
-  uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=5').to_s
+  # query_key = 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword='
+  # area = ''
+  # food = ''
+  # query = query_key + area + food + '&hit_per_page=5'
+
+  uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
   uri        = URI.parse(uri_string)
   json       = Net::HTTP.get(uri)
   results    = JSON.parse(json)
@@ -64,6 +69,47 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
+        query = ''
+        query_key = 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword='
+
+        if event.message['text'] =~ /(\s|　)/
+          area = $`
+          food = $'
+          query = query_key + area + food + '&hit_per_page=5'
+        end
+
+        uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
+        uri        = URI.parse(uri_string)
+        json       = Net::HTTP.get(uri)
+        results    = JSON.parse(json)
+
+        columns = []
+
+        results['rest'].each_with_index do |result, index|
+          hash                      = {}
+          hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
+          hash['title']             = result['name'][0, 40]
+          hash['text']              = 'description'
+          hash['actions']           = [
+            {
+              type:  "postback",
+              label: "Buy",
+              data:  "action=buy&itemid=111"
+            },
+            {
+              type:  "postback",
+              label: "Add to cart",
+              data:  "action=add&itemid=111"
+            },
+            {
+              type:  "uri",
+              label: "お店の情報を見る",
+              uri:   "#{result['url_mobile']}"
+            }
+          ]
+          columns[index]            = hash
+        end
+
         message  = {
           type: 'text',
           text: event.message['text']
@@ -98,9 +144,9 @@ post '/callback' do
         }
 
         if event.message['text'] == '確認'
-          client.reply_message(event['replyToken'], carousel)
-        else
           client.reply_message(event['replyToken'], message)
+        else
+          client.reply_message(event['replyToken'], carousel)
         end
       when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
         response = client.get_message_content(event.message['id'])
