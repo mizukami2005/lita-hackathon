@@ -1,5 +1,8 @@
 require 'sinatra'
 require 'line/bot'
+require 'json'
+require 'uri'
+require 'net/http'
 
 get '/' do
   "Hello world Web test"
