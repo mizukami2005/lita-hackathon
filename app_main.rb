@@ -51,8 +51,8 @@ post '/callback' do
       },
       {
         type:  "uri",
-        label: "View detail",
-        uri:   "http://example.com/page/111"
+        label: "お店の情報を見る",
+        uri:   "#{result['url_mobile']}"
       }
     ]
     columns[index]            = hash
