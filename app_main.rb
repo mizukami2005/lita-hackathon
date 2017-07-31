@@ -6,10 +6,6 @@ require 'net/http'
 
 get '/' do
   "Hello world Web test"
-  uri = URI.parse('https://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1')
-  json = Net::HTTP.get(uri)
-  result = JSON.parser(json)
-  puts result
 end
 
 def client
@@ -28,6 +24,13 @@ post '/callback' do
       'Bad Request'
     end
   end
+
+  # ぐるなびapi
+  uri_string = 'https://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1'
+  uri_escape = URI.escape(uri_string)
+  uri = URI.parse(uri_escape)
+  json = Net::HTTP.get(uri)
+  result = JSON.parse(json)
 
   events = client.parse_events_from(body)
   events.each { |event|
@@ -66,8 +69,8 @@ post '/callback' do
             type:    "carousel",
             columns: [
                        {
-                         thumbnailImageUrl: "https://example.com/bot/images/item1.jpg",
-                         title:             "this is menu",
+                         thumbnailImageUrl: "#{result['rest']['image_url']['shop_image1']}",
+                         title:             "#{result['rest']['name']}",
                          text:              "description",
                          actions:           [
                                               {
