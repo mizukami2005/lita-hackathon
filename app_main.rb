@@ -26,11 +26,10 @@ post '/callback' do
   end
 
   # ぐるなびapi
-  uri_string = 'https://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1'
-  uri_escape = URI.escape(uri_string)
-  uri = URI.parse(uri_escape)
+  uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1').to_s
+  uri = URI.parse(uri_string)
   json = Net::HTTP.get(uri)
-  result = JSON.parse(json)
+  results = JSON.parse(json)
 
   events = client.parse_events_from(body)
   events.each { |event|
@@ -69,8 +68,8 @@ post '/callback' do
             type:    "carousel",
             columns: [
                        {
-                         thumbnailImageUrl: "#{result['rest']['image_url']['shop_image1']}",
-                         title:             "#{result['rest']['name']}",
+                         thumbnailImageUrl: "#{results['rest']['image_url']['shop_image1']}",
+                         title:             "#{results['rest']['name']}",
                          text:              "description",
                          actions:           [
                                               {
@@ -91,8 +90,8 @@ post '/callback' do
                                             ]
                        },
                        {
-                         thumbnailImageUrl: "https://example.com/bot/images/item2.jpg",
-                         title:             "this is menu",
+                         thumbnailImageUrl: "#{results['rest']['image_url']['shop_image2']}",
+                         title:             "#{results['rest']['name']}",
                          text:              "description",
                          actions:           [
                                               {
