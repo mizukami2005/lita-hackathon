@@ -26,10 +26,37 @@ post '/callback' do
   end
 
   # ぐるなびapi
-  uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=1').to_s
-  uri = URI.parse(uri_string)
-  json = Net::HTTP.get(uri)
-  results = JSON.parse(json)
+  uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: 'keyid=0981d433e05e9b622e56f239060ca60d&format=json&freeword=和食&hit_per_page=5').to_s
+  uri        = URI.parse(uri_string)
+  json       = Net::HTTP.get(uri)
+  results    = JSON.parse(json)
+
+  columns = []
+
+  results['rest'].each_with_index do |result, index|
+    hash                      = {}
+    hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
+    hash['title']             = result['title']
+    hash['text']              = 'description'
+    hash['actions']           = [
+      {
+        type:  "postback",
+        label: "Buy",
+        data:  "action=buy&itemid=111"
+      },
+      {
+        type:  "postback",
+        label: "Add to cart",
+        data:  "action=add&itemid=111"
+      },
+      {
+        type:  "uri",
+        label: "View detail",
+        uri:   "http://example.com/page/111"
+      }
+    ]
+    columns[index]            = hash
+  end
 
   events = client.parse_events_from(body)
   events.each { |event|
@@ -66,52 +93,7 @@ post '/callback' do
           altText:  "this is a carousel template",
           template: {
             type:    "carousel",
-            columns: [
-                       {
-                         thumbnailImageUrl: "#{results['rest']['image_url']['shop_image1']}",
-                         title:             "#{results['rest']['name']}",
-                         text:              "description",
-                         actions:           [
-                                              {
-                                                type:  "postback",
-                                                label: "Buy",
-                                                data:  "action=buy&itemid=111"
-                                              },
-                                              {
-                                                type:  "postback",
-                                                label: "Add to cart",
-                                                data:  "action=add&itemid=111"
-                                              },
-                                              {
-                                                type:  "uri",
-                                                label: "View detail",
-                                                uri:   "http://example.com/page/111"
-                                              }
-                                            ]
-                       },
-                       {
-                         thumbnailImageUrl: "#{results['rest']['image_url']['shop_image2']}",
-                         title:             "#{results['rest']['name']}",
-                         text:              "description",
-                         actions:           [
-                                              {
-                                                type:  "postback",
-                                                label: "Buy",
-                                                data:  "action=buy&itemid=222"
-                                              },
-                                              {
-                                                type:  "postback",
-                                                label: "Add to cart",
-                                                data:  "action=add&itemid=222"
-                                              },
-                                              {
-                                                type:  "uri",
-                                                label: "View detail",
-                                                uri:   "http://example.com/page/222"
-                                              }
-                                            ]
-                       }
-                     ]
+            columns: columns
           }
         }
 
