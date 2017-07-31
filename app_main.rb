@@ -33,6 +33,7 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         key = ENV["API_KEY"]
 
+
         if event.message['text'] =~ /(\s|　)/
           area  = $`
           food  = $'
@@ -89,6 +90,9 @@ post '/callback' do
         end
 
         message  = {
+          type: 'text',
+          text: event.message['text']
+        }, {
           type: 'text',
           text: event.message['text']
         }
