@@ -36,8 +36,8 @@ post '/callback' do
   results['rest'].each_with_index do |result, index|
     hash                      = {}
     hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
-    hash['title']             = result['title']
-    hash['text']              = 'description'
+    hash['title']             = result['name']
+    hash['text']              = result['pr']['pr_short']
     hash['actions']           = [
       {
         type:  "postback",
