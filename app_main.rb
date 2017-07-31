@@ -93,12 +93,12 @@ post '/callback' do
               {
                 type:  "postback",
                 label: "Buy",
-                data:  "action=buy&itemid=111"
+                data:  "#{result['name'][0, 40]}"
               },
               {
                 type:  "postback",
                 label: "Add to cart",
-                data:  "action=add&itemid=111"
+                data:  "#{result['name'][0, 40]}"
               },
               {
                 type:  "uri",
