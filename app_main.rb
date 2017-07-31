@@ -37,7 +37,7 @@ post '/callback' do
     hash                      = {}
     hash['thumbnailImageUrl'] = result['image_url']['shop_image1']
     hash['title']             = result['name']
-    hash['text']              = result['pr']['pr_short']
+    hash['text']              = 'description'
     hash['actions']           = [
       {
         type:  "postback",
