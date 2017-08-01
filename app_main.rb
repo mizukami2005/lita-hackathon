@@ -81,7 +81,7 @@ post '/callback' do
                 {
                   type:  "postback",
                   label: "地図を見る",
-                  data:  "address=#{result['address']}&latitude=#{result['latitude']}&longitude=#{result['longitude']}"
+                  data:  "#{result['address']},latitude=#{result['latitude']},#{result['longitude']}"
                 },
                 {
                   type:  "uri",
@@ -141,10 +141,10 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      name    = event["postback"]["data"]
+      name    = event["postback"]["data"].split(',')
       message = {
         type: 'text',
-        text: name
+        text: name[0]
       }
       # message = {
       #   "type":      "location",
