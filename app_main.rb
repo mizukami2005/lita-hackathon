@@ -81,7 +81,7 @@ post '/callback' do
                 {
                   type:  "postback",
                   label: "地図を見る",
-                  data:  "#{result['address']},latitude=#{result['latitude']},#{result['longitude']}"
+                  data:  "#{result['address']},#{result['latitude']},#{result['longitude']}"
                 },
                 {
                   type:  "uri",
@@ -142,17 +142,17 @@ post '/callback' do
       end
     when Line::Bot::Event::Postback
       name    = event["postback"]["data"].split(',')
-      message = {
-        type: 'text',
-        text: name[1]
-      }
       # message = {
-      #   "type":      "location",
-      #   "title":     "my location",
-      #   "address":   "〒150-0002 東京都渋谷区渋谷２丁目２１−１",
-      #   "latitude":  35.65910807942215,
-      #   "longitude": 139.70372892916203
+      #   type: 'text',
+      #   text: name[1]
       # }
+      message = {
+        "type":      "location",
+        "title":     "my location",
+        "address":   name[0],
+        "latitude":  name[1],
+        "longitude": name[2]
+      }
       client.reply_message(event['replyToken'], message)
     end
   }
