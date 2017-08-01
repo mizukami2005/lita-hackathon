@@ -141,7 +141,6 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      message = {}
       if event["postback"]["data"].include?('name')
         name    = event["postback"]["data"].split('=')
         message = {
