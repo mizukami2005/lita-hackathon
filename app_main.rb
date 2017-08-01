@@ -79,6 +79,11 @@ post '/callback' do
                   data:  "#{result['name'][0, 40]}"
                 },
                 {
+                  type:  "postback",
+                  label: "地図を見る",
+                  data:  "#{result['address']}"
+                },
+                {
                   type:  "uri",
                   label: "お店の情報を見る",
                   uri:   "#{result['url_mobile']}"
@@ -136,11 +141,18 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      name    = event["postback"]["data"]
-      message = {
-        type: 'text',
-        text: name
-      }
+      if event["postback"]["data"] =~ /〒/
+        message = {
+          type:    "location",
+          address: event["postback"]["data"],
+        }
+      else
+        name    = event["postback"]["data"]
+        message = {
+          type: 'text',
+          text: name
+        }
+      end
       client.reply_message(event['replyToken'], message)
     end
   }
