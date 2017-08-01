@@ -37,7 +37,7 @@ post '/callback' do
         if event.message['text'] =~ /(\s|　)/
           area  = $`
           food  = $'
-          query = "keyid=#{key}&format=json&freeword=#{area}\s#{food}&hit_per_page=5"
+          query = "keyid=#{key}&format=json&freeword=#{area}\s#{food}"
 
           uri_string = URI::Generic.build(scheme: 'https', host: 'api.gnavi.co.jp', path: '/RestSearchAPI/20150630/', query: query).to_s
           uri        = URI.parse(uri_string)
