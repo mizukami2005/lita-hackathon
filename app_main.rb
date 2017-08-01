@@ -144,7 +144,7 @@ post '/callback' do
       name    = event["postback"]["data"].split(',')
       message = {
         type: 'text',
-        text: name[0]
+        text: name[1]
       }
       # message = {
       #   "type":      "location",
