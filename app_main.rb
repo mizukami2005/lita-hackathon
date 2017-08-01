@@ -97,9 +97,6 @@ post '/callback' do
         message  = {
           type: 'text',
           text: event.message['text']
-        }, {
-          type: 'text',
-          text: event.message['text']
         }
         question = {
           type:     "template",
