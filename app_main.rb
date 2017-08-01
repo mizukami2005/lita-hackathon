@@ -63,7 +63,7 @@ post '/callback' do
             }
             client.reply_message(event['replyToken'], error_message)
           else
-            results['rest'].each_with_index do |result, index|
+            results['rest'].shuffle.first(5).each_with_index do |result, index|
               hash = {}
               if result['image_url']['shop_image1'].empty?
                 hash['thumbnailImageUrl'] = 'https://raw.githubusercontent.com/mizukami2005/lita-hackathon/master/no_image.png'
