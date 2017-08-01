@@ -143,8 +143,8 @@ post '/callback' do
     when Line::Bot::Event::Postback
       if event["postback"]["data"] =~ /〒/
         message = {
-          type:    "location",
-          address: event["postback"]["data"],
+          type:    'text',
+          address: event["postback"]["data"]
         }
       else
         name    = event["postback"]["data"]
