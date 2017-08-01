@@ -76,7 +76,7 @@ post '/callback' do
                 {
                   type:  "postback",
                   label: "投票",
-                  data:  "#{result['name'][0, 40]}"
+                  data:  "name=#{result['name'][0, 40]}"
                 },
                 {
                   type:  "postback",
@@ -141,18 +141,23 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      name    = event["postback"]["data"].split(',')
-      # message = {
-      #   type: 'text',
-      #   text: name[1]
-      # }
-      message = {
-        "type":      "location",
-        "title":     "my location",
-        "address":   name[0],
-        "latitude":  name[1],
-        "longitude": name[2]
-      }
+      message = {}
+      if event["postback"]["data"].include?('name')
+        name    = event["postback"]["data"].split('=')
+        message = {
+          type: 'text',
+          text: name[1]
+        }
+      else
+        address = event["postback"]["data"].split(',')
+        message = {
+          type:      'location',
+          title:     '場所',
+          address:   address[0],
+          latitude:  address[1],
+          longitude: address[2]
+        }
+      end
       client.reply_message(event['replyToken'], message)
     end
   }
