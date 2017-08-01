@@ -142,9 +142,16 @@ post '/callback' do
       end
     when Line::Bot::Event::Postback
       name    = event["postback"]["data"]
+      # message = {
+      #   type: 'text',
+      #   text: name
+      # }
       message = {
-        type: 'text',
-        text: name
+        "type": "location",
+        "title": "my location",
+        "address": "〒150-0002 東京都渋谷区渋谷２丁目２１−１",
+        "latitude": 35.65910807942215,
+        "longitude": 139.70372892916203
       }
       client.reply_message(event['replyToken'], message)
     end
