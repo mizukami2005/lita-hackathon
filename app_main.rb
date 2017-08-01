@@ -141,18 +141,11 @@ post '/callback' do
         tf.write(response.body)
       end
     when Line::Bot::Event::Postback
-      if event["postback"]["data"] =~ /〒/
-        message = {
-          type:    'text',
-          address: event["postback"]["data"]
-        }
-      else
-        name    = event["postback"]["data"]
-        message = {
-          type: 'text',
-          text: name
-        }
-      end
+      name    = event["postback"]["data"]
+      message = {
+        type: 'text',
+        text: name
+      }
       client.reply_message(event['replyToken'], message)
     end
   }
