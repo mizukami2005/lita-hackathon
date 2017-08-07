@@ -4,8 +4,9 @@ require 'json'
 require 'uri'
 require 'net/http'
 
-get '/' do
-  "Hello world Web test"
+post '/' do
+  # "Hello world Web test"
+  p params
 end
 
 post '/hoge' do
