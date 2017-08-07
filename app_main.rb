@@ -7,7 +7,7 @@ require 'net/http'
 post '/' do
   # "Hello world Web test"
   # 'OK'
-  params
+  params[:foo]
 end
 
 post '/hoge' do
