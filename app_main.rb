@@ -8,6 +8,10 @@ get '/' do
   "Hello world Web test"
 end
 
+post '/hoge' do
+  'Yes'
+end
+
 def client
   @client ||= Line::Bot::Client.new { |config|
     config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
